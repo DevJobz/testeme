@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>QuestionAI - Gerador de Questões Inteligente</title>
+        <link rel="stylesheet" href="css/styles.css" />
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="loading-screen">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <h2>QuestionAI</h2>
+                <p>Carregando...</p>
+            </div>
+        </div>
+
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="theme-toggle" title="Alternar tema">
+            <i class="fas fa-moon"></i>
+        </button>
+
+        <!-- Floating Action Button -->
+        <div class="fab-container" id="fab-container">
+            <button class="fab-main" id="fab-main">
+                <i class="fas fa-plus"></i>
+            </button>
+            <div class="fab-menu" id="fab-menu">
+                <button
+                    class="fab-item"
+                    data-action="generate"
+                    title="Gerar Questões"
+                >
+                    <i class="fas fa-magic"></i>
+                </button>
+                <button
+                    class="fab-item"
+                    data-action="study"
+                    title="Modo Estudo"
+                >
+                    <i class="fas fa-clock"></i>
+                </button>
+                <button
+                    class="fab-item"
+                    data-action="favorites"
+                    title="Favoritos"
+                >
+                    <i class="fas fa-heart"></i>
+                </button>
+                <button
+                    class="fab-item"
+                    data-action="export"
+                    title="Exportar PDF"
+                >
+                    <i class="fas fa-file-pdf"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <i class="fas fa-brain"></i>
+                    <span>QuestionAI</span>
+                </div>
+                <div class="nav-menu" id="nav-menu">
+                    <a href="#" class="nav-link" data-page="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="generator">
+                        <i class="fas fa-magic"></i>
+                        <span>Gerar</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="questions">
+                        <i class="fas fa-list"></i>
+                        <span>Questões</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="study">
+                        <i class="fas fa-clock"></i>
+                        <span>Estudo</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="favorites">
+                        <i class="fas fa-heart"></i>
+                        <span>Favoritos</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="reports">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Relatórios</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="faq">
+                        <i class="fas fa-question-circle"></i>
+                        <span>FAQ</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="profile">
+                        <i class="fas fa-user"></i>
+                        <span>Perfil</span>
+                    </a>
+                    <a href="#" class="nav-link logout-btn" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </div>
+                <div class="nav-toggle" id="nav-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Container -->
+        <div class="main-container" id="main-container">
+            <!-- Login Page -->
+            <div class="page active" id="login-page">
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <div class="auth-header">
+                            <div class="auth-logo">
+                                <i class="fas fa-brain"></i>
+                                <h1>QuestionAI</h1>
+                            </div>
+                            <p>Faça login para continuar</p>
+                        </div>
+                        <form class="auth-form" id="login-form">
+                            <div class="form-group">
+                                <label for="login-email">Email</label>
+                                <input type="email" id="login-email" required />
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password">Senha</label>
+                                <input
+                                    type="password"
+                                    id="login-password"
+                                    required
+                                />
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Entrar
+                            </button>
+                        </form>
+                        <div class="auth-footer">
+                            <p>
+                                Não tem uma conta?
+                                <a href="#" id="show-register">Cadastre-se</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Register Page -->
+            <div class="page" id="register-page">
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <div class="auth-header">
+                            <div class="auth-logo">
+                                <i class="fas fa-brain"></i>
+                                <h1>QuestionAI</h1>
+                            </div>
+                            <p>Crie sua conta</p>
+                        </div>
+                        <form class="auth-form" id="register-form">
+                            <div class="form-group">
+                                <label for="register-name">Nome Completo</label>
+                                <input
+                                    type="text"
+                                    id="register-name"
+                                    required
+                                />
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-email">Email</label>
+                                <input
+                                    type="email"
+                                    id="register-email"
+                                    required
+                                />
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-password">Senha</label>
+                                <input
+                                    type="password"
+                                    id="register-password"
+                                    required
+                                />
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-confirm-password"
+                                    >Confirmar Senha</label
+                                >
+                                <input
+                                    type="password"
+                                    id="register-confirm-password"
+                                    required
+                                />
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i>
+                                Cadastrar
+                            </button>
+                        </form>
+                        <div class="auth-footer">
+                            <p>
+                                Já tem uma conta?
+                                <a href="#" id="show-login">Faça login</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div class="page" id="dashboard-page">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                    <p>
+                        Bem-vindo de volta! Aqui está um resumo das suas
+                        atividades.
+                    </p>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="total-questions">0</h3>
+                            <p>Questões Geradas</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="answered-questions">0</h3>
+                            <p>Questões Respondidas</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="user-level">1</h3>
+                            <p>Nível Atual</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="user-points">0</h3>
+                            <p>Pontos Totais</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="current-streak">0</h3>
+                            <p>Sequência Atual</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="accuracy-rate">0%</h3>
+                            <p>Taxa de Acerto</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="recent-activity">
+                    <h2>Atividade Recente</h2>
+                    <div class="activity-list" id="activity-list">
+                        <!-- Activities will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generator Page -->
+            <div class="page" id="generator-page">
+                <div class="page-header">
+                    <h1>Gerar Questões</h1>
+                    <p>
+                        Carregue um PDF ou cole um texto para gerar questões
+                        personalizadas.
+                    </p>
+                </div>
+                <div class="generator-container">
+                    <div class="input-section">
+                        <div class="input-tabs">
+                            <button class="tab-btn active" data-tab="pdf">
+                                <i class="fas fa-file-pdf"></i>
+                                Upload PDF
+                            </button>
+                            <button class="tab-btn" data-tab="text">
+                                <i class="fas fa-text-width"></i>
+                                Inserir Texto
+                            </button>
+                        </div>
+
+                        <div class="tab-content active" id="pdf-tab">
+                            <div class="file-upload-area" id="file-upload-area">
+                                <div class="upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <h3>Arraste e solte seu PDF aqui</h3>
+                                <p>ou clique para selecionar um arquivo</p>
+                                <input
+                                    type="file"
+                                    id="pdf-input"
+                                    accept=".pdf"
+                                    hidden
+                                />
+                                <button
+                                    class="btn btn-secondary"
+                                    onclick="document.getElementById('pdf-input').click()"
+                                >
+                                    Selecionar Arquivo
+                                </button>
+                            </div>
+                            <div
+                                class="file-info"
+                                id="file-info"
+                                style="display: none"
+                            >
+                                <div class="file-details">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <div>
+                                        <h4 id="file-name"></h4>
+                                        <p id="file-size"></p>
+                                    </div>
+                                    <button class="btn-remove" id="remove-file">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="text-tab">
+                            <div class="text-input-area">
+                                <label for="text-input"
+                                    >Cole ou digite seu texto aqui:</label
+                                >
+                                <textarea
+                                    id="text-input"
+                                    placeholder="Cole seu texto aqui para gerar questões baseadas no conteúdo..."
+                                ></textarea>
+                                <div class="text-stats">
+                                    <span id="char-count">0 caracteres</span>
+                                    <span id="word-count">0 palavras</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Configurações das Questões</h3>
+                        <div class="settings-grid">
+                            <div class="setting-group">
+                                <label for="question-count"
+                                    >Quantidade de Questões</label
+                                >
+                                <select id="question-count">
+                                    <option value="5">5 questões</option>
+                                    <option value="10" selected>
+                                        10 questões
+                                    </option>
+                                    <option value="15">15 questões</option>
+                                    <option value="20">20 questões</option>
+                                </select>
+                            </div>
+                            <div class="setting-group">
+                                <label for="difficulty-level"
+                                    >Nível de Dificuldade</label
+                                >
+                                <select id="difficulty-level">
+                                    <option value="facil">Fácil</option>
+                                    <option value="medio" selected>
+                                        Médio
+                                    </option>
+                                    <option value="dificil">Difícil</option>
+                                    <option value="misto">Misto</option>
+                                </select>
+                            </div>
+                            <div class="setting-group">
+                                <label for="question-type"
+                                    >Tipo de Questão</label
+                                >
+                                <select id="question-type">
+                                    <option value="multipla-escolha" selected>
+                                        Múltipla Escolha
+                                    </option>
+                                    <option value="verdadeiro-falso">
+                                        Verdadeiro/Falso
+                                    </option>
+                                    <option value="dissertativa">
+                                        Dissertativa
+                                    </option>
+                                    <option value="misto">Misto</option>
+                                </select>
+                            </div>
+                            <div class="setting-group">
+                                <label for="focus-area">Área de Foco</label>
+                                <select id="focus-area">
+                                    <option value="geral" selected>
+                                        Geral
+                                    </option>
+                                    <option value="conceitos">
+                                        Conceitos Principais
+                                    </option>
+                                    <option value="detalhes">
+                                        Detalhes Específicos
+                                    </option>
+                                    <option value="aplicacao">
+                                        Aplicação Prática
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="setting-group">
+                                <label for="alternatives-count"
+                                    >Número de Alternativas</label
+                                >
+                                <select id="alternatives-count">
+                                    <option value="2">2 alternativas</option>
+                                    <option value="3">3 alternativas</option>
+                                    <option value="4" selected>
+                                        4 alternativas
+                                    </option>
+                                    <option value="5">5 alternativas</option>
+                                </select>
+                            </div>
+                            <div class="setting-group">
+                                <label for="complexity-level"
+                                    >Complexidade</label
+                                >
+                                <select id="complexity-level">
+                                    <option value="standard" selected>
+                                        Padrão
+                                    </option>
+                                    <option value="complex">Complexo</option>
+                                    <option value="contextual">
+                                        Contextual
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="setting-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        id="contextual-questions"
+                                    />
+                                    <span class="checkmark"></span>
+                                    Questões Contextuais (Histórias)
+                                </label>
+                            </div>
+                        </div>
+                        <button
+                            class="btn btn-primary btn-generate"
+                            id="generate-btn"
+                            disabled
+                        >
+                            <i class="fas fa-magic"></i>
+                            Gerar Questões
+                        </button>
+                    </div>
+                </div>
+
+                <div
+                    class="generation-progress"
+                    id="generation-progress"
+                    style="display: none"
+                >
+                    <div class="progress-content">
+                        <div class="progress-spinner"></div>
+                        <h3>Gerando questões...</h3>
+                        <p>
+                            Isso pode levar alguns segundos. Por favor, aguarde.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Mode Page -->
+            <div class="page" id="study-page">
+                <div class="page-header">
+                    <h1>Modo Estudo</h1>
+                    <p>
+                        Sessões cronometradas com filtros avançados para
+                        otimizar seu aprendizado.
+                    </p>
+                </div>
+                <div class="study-setup" id="study-setup">
+                    <div class="study-config">
+                        <h3>Configurar Sessão de Estudo</h3>
+                        <div class="config-grid">
+                            <div class="config-group">
+                                <label for="study-duration"
+                                    >Duração da Sessão</label
+                                >
+                                <select id="study-duration">
+                                    <option value="15">15 minutos</option>
+                                    <option value="30" selected>
+                                        30 minutos
+                                    </option>
+                                    <option value="45">45 minutos</option>
+                                    <option value="60">1 hora</option>
+                                </select>
+                            </div>
+                            <div class="config-group">
+                                <label for="study-question-count"
+                                    >Número de Questões</label
+                                >
+                                <select id="study-question-count">
+                                    <option value="10">10 questões</option>
+                                    <option value="20" selected>
+                                        20 questões
+                                    </option>
+                                    <option value="30">30 questões</option>
+                                    <option value="50">50 questões</option>
+                                </select>
+                            </div>
+                            <div class="config-group">
+                                <label for="study-difficulty"
+                                    >Dificuldade</label
+                                >
+                                <select id="study-difficulty">
+                                    <option value="all">Todas</option>
+                                    <option value="facil">Fácil</option>
+                                    <option value="medio" selected>
+                                        Médio
+                                    </option>
+                                    <option value="dificil">Difícil</option>
+                                </select>
+                            </div>
+                            <div class="config-group">
+                                <label for="study-mode">Modo de Estudo</label>
+                                <select id="study-mode">
+                                    <option value="practice" selected>
+                                        Prática
+                                    </option>
+                                    <option value="exam">Simulado</option>
+                                    <option value="review">Revisão</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button
+                            class="btn btn-primary btn-large"
+                            id="start-study"
+                        >
+                            <i class="fas fa-play"></i>
+                            Iniciar Sessão de Estudo
+                        </button>
+                    </div>
+                </div>
+                <div
+                    class="study-session"
+                    id="study-session"
+                    style="display: none"
+                >
+                    <div class="study-header">
+                        <div class="study-timer">
+                            <i class="fas fa-clock"></i>
+                            <span id="timer-display">30:00</span>
+                        </div>
+                        <div class="study-progress">
+                            <span id="question-progress">1 / 20</span>
+                            <div class="progress-bar">
+                                <div
+                                    class="progress-fill"
+                                    id="progress-fill"
+                                ></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" id="pause-study">
+                            <i class="fas fa-pause"></i>
+                            Pausar
+                        </button>
+                    </div>
+                    <div class="study-question" id="study-question">
+                        <!-- Current question will be displayed here -->
+                    </div>
+                </div>
+                <div class="history-container" id="study-history-container">
+                    <div class="history-header">
+                        <h2>
+                            <i class="fas fa-history"></i> Histórico de Sessões
+                        </h2>
+                        <div class="history-actions">
+                            <button
+                                id="clear-history-btn"
+                                class="btn btn-danger"
+                            >
+                                <i class="fas fa-trash"></i> Limpar Histórico
+                            </button>
+                        </div>
+                    </div>
+                    <div id="study-history" class="history-grid"></div>
+                </div>
+            </div>
+
+            <!-- Favorites Page -->
+            <div class="page" id="favorites-page">
+                <div class="page-header">
+                    <h1>Questões Favoritas</h1>
+                    <p>
+                        Suas questões marcadas como favoritas para revisão
+                        rápida.
+                    </p>
+                </div>
+                <div class="favorites-list" id="favorites-list">
+                    <!-- Favorite questions will be populated by JavaScript -->
+                </div>
+            </div>
+            <div class="page" id="questions-page">
+                <div class="page-header">
+                    <h1>Minhas Questões</h1>
+                    <p>Visualize e responda suas questões geradas.</p>
+                </div>
+                <div class="questions-filters">
+                    <div class="filter-group">
+                        <label for="filter-status">Status</label>
+                        <select id="filter-status">
+                            <option value="all">Todas</option>
+                            <option value="answered">Respondidas</option>
+                            <option value="unanswered">Não Respondidas</option>
+                            <option value="favorites">Favoritas</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-difficulty">Dificuldade</label>
+                        <select id="filter-difficulty">
+                            <option value="all">Todas</option>
+                            <option value="facil">Fácil</option>
+                            <option value="medio">Médio</option>
+                            <option value="dificil">Difícil</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-type">Tipo</label>
+                        <select id="filter-type">
+                            <option value="all">Todos</option>
+                            <option value="multipla-escolha">
+                                Múltipla Escolha
+                            </option>
+                            <option value="verdadeiro-falso">
+                                Verdadeiro/Falso
+                            </option>
+                            <option value="dissertativa">Dissertativa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="questions-list" id="questions-list">
+                    <!-- Questions will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div class="page" id="reports-page">
+                <div class="page-header">
+                    <h1>Relatórios e Análises</h1>
+                    <p>Acompanhe seu desempenho e progresso.</p>
+                </div>
+                <div class="reports-container">
+                    <div class="charts-section">
+                        <div class="chart-container">
+                            <h3>Desempenho por Dificuldade</h3>
+                            <canvas id="difficulty-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Progresso ao Longo do Tempo</h3>
+                            <canvas id="progress-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="stats-overview">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="best-streak">0</h3>
+                                <p>Melhor Sequência</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="avg-time">0s</h3>
+                                <p>Tempo Médio</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="favorite-category">-</h3>
+                                <p>Categoria Favorita</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="total-points">0</h3>
+                                <p>Total de Pontos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div class="page" id="profile-page">
+                <div class="page-header">
+                    <h1>Perfil do Usuário</h1>
+                    <p>Gerencie suas informações pessoais e preferências.</p>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-card">
+                        <div class="profile-avatar">
+                            <div class="avatar-circle" id="avatar-circle">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <button class="btn btn-secondary btn-sm">
+                                Alterar Foto
+                            </button>
+                        </div>
+                        <form class="profile-form" id="profile-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profile-name"
+                                        >Nome Completo</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="profile-name"
+                                        required
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-email">Email</label>
+                                    <input
+                                        type="email"
+                                        id="profile-email"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profile-phone">Telefone</label>
+                                    <input type="tel" id="profile-phone" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-occupation"
+                                        >Profissão</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="profile-occupation"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-bio">Biografia</label>
+                                <textarea
+                                    id="profile-bio"
+                                    placeholder="Conte um pouco sobre você..."
+                                ></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Salvar Alterações
+                            </button>
+                        </form>
+                    </div>
+                    <div class="profile-section">
+                        <h3>Conquistas</h3>
+                        <div class="level-progress">
+                            <h4>Progresso do Nível</h4>
+                            <div class="progress-bar">
+                                <div
+                                    class="progress-fill"
+                                    id="level-progress-fill"
+                                    style="width: 0%"
+                                ></div>
+                            </div>
+                            <div class="progress-text">
+                                <span id="level-progress-text">Nível 1</span>
+                                <span id="level-progress-points"
+                                    >0/100 pontos</span
+                                >
+                            </div>
+                        </div>
+                        <div
+                            class="achievements-grid"
+                            id="achievements-container"
+                        >
+                            <!-- Achievements will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="profile-section">
+                        <h3>Preferências</h3>
+                        <div class="preference-item">
+                            <label class="switch">
+                                <input type="checkbox" id="dark-mode-toggle" />
+                                <span class="slider"></span>
+                            </label>
+                            <div class="preference-info">
+                                <h4>Modo Escuro</h4>
+                                <p>
+                                    Ativar tema escuro para melhor experiência
+                                    noturna
+                                </p>
+                            </div>
+                        </div>
+                        <div class="preference-item">
+                            <label class="switch">
+                                <input
+                                    type="checkbox"
+                                    id="notifications-toggle"
+                                    checked
+                                />
+                                <span class="slider"></span>
+                            </label>
+                            <div class="preference-info">
+                                <h4>Notificações</h4>
+                                <p>
+                                    Receber notificações sobre novas questões e
+                                    relatórios
+                                </p>
+                            </div>
+                        </div>
+                        <div class="preference-item">
+                            <label class="switch">
+                                <input
+                                    type="checkbox"
+                                    id="auto-save-toggle"
+                                    checked
+                                />
+                                <span class="slider"></span>
+                            </label>
+                            <div class="preference-info">
+                                <h4>Salvamento Automático</h4>
+                                <p>
+                                    Salvar automaticamente o progresso das
+                                    questões
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="data-management">
+                        <h3>Gerenciamento de Dados</h3>
+                        <div class="data-actions">
+                            <button
+                                class="btn btn-secondary"
+                                id="export-data-btn"
+                            >
+                                <i class="fas fa-download"></i>
+                                Exportar Dados
+                            </button>
+                            <button
+                                class="btn btn-secondary"
+                                id="import-data-btn"
+                            >
+                                <i class="fas fa-upload"></i>
+                                Importar Dados
+                            </button>
+                            <button class="btn btn-danger" id="clear-data-btn">
+                                <i class="fas fa-trash"></i>
+                                Limpar Todos os Dados
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Page -->
+            <div class="page" id="faq-page">
+                <div class="page-header">
+                    <h1>Perguntas Frequentes (FAQ)</h1>
+                    <p>
+                        Tire suas dúvidas sobre o QuestionAI e suas
+                        funcionalidades.
+                    </p>
+                </div>
+                <div class="faq-container">
+                    <div class="faq-section">
+                        <h2>Sobre o QuestionAI</h2>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h3>O que é o QuestionAI?</h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>
+                                    O QuestionAI é uma plataforma inteligente
+                                    que gera questões personalizadas a partir de
+                                    documentos PDF ou textos inseridos.
+                                    Utilizando inteligência artificial avançada,
+                                    o sistema cria questões contextuais e
+                                    relevantes para auxiliar nos seus estudos e
+                                    avaliações.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h3>Como funciona a geração de questões?</h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>
+                                    O sistema analisa o conteúdo fornecido (PDF
+                                    ou texto) e utiliza IA para criar questões
+                                    que testam a compreensão dos conceitos
+                                    principais. Você pode configurar a
+                                    quantidade, dificuldade e tipo de questões
+                                    desejadas.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-section">
+                        <h2>Configurações de Questões</h2>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h3>Quais tipos de questões posso gerar?</h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>
+                                    O QuestionAI oferece três tipos de questões:
+                                </p>
+                                <ul>
+                                    <li>
+                                        <strong>Múltipla Escolha:</strong>
+                                        Questões com 4 alternativas (A, B, C, D)
+                                    </li>
+                                    <li>
+                                        <strong>Verdadeiro/Falso:</strong>
+                                        Questões de afirmação com resposta
+                                        binária
+                                    </li>
+                                    <li>
+                                        <strong>Dissertativa:</strong> Questões
+                                        abertas que requerem resposta elaborada
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h3>
+                                    Como funcionam os níveis de dificuldade?
+                                </h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Os níveis de dificuldade são:</p>
+                                <ul>
+                                    <li>
+                                        <strong>Fácil:</strong> Questões sobre
+                                        conceitos básicos e definições
+                                    </li>
+                                    <li>
+                                        <strong>Médio:</strong> Questões que
+                                        exigem compreensão e aplicação
+                                    </li>
+                                    <li>
+                                        <strong>Difícil:</strong> Questões de
+                                        análise crítica e síntese
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h3>O que significa "Área de Foco"?</h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>
+                                    A área de foco determina o tipo de abordagem
+                                    das questões:
+                                </p>
+                                <ul>
+                                    <li>
+                                        <strong>Geral:</strong> Questões
+                                        abrangentes sobre todo o conteúdo
+                                    </li>
+                                    <li>
+                                        <strong>Conceitos:</strong> Foco em
+                                        definições e teorias
+                                    </li>
+                                    <li>
+                                        <strong>Aplicação Prática:</strong>
+                                        Questões sobre como aplicar o
+                                        conhecimento em situações reais
+                                    </li>
+                                    <li>
+                                        <strong>Análise Crítica:</strong>
+                                        Questões que exigem interpretação e
+                                        avaliação
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-section">
+                        <h2>Funcionalidades</h2>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h3>Como posso acompanhar meu progresso?</h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>
+                                    O QuestionAI oferece relatórios detalhados
+                                    na aba "Relatórios", incluindo:
+                                </p>
+                                <ul>
+                                    <li>Taxa de acerto por dificuldade</li>
+                                    <li>Progresso ao longo do tempo</li>
+                                    <li>Estatísticas de desempenho</li>
+                                    <li>Tempo médio de resposta</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h3>Posso exportar minhas questões?</h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>
+                                    Sim! Você pode exportar todos os seus dados
+                                    através da aba "Perfil" > "Gerenciamento de
+                                    Dados" > "Exportar Dados". Isso inclui
+                                    questões, respostas e estatísticas.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h3>Meus dados ficam salvos?</h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>
+                                    Sim! Todos os seus dados são salvos
+                                    localmente no seu navegador e ficam isolados
+                                    por perfil de usuário. Cada conta mantém
+                                    seus próprios dados de forma completamente
+                                    separada.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-section">
+                        <h2>Suporte Técnico</h2>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h3>Que formatos de arquivo são suportados?</h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Atualmente, o QuestionAI suporta:</p>
+                                <ul>
+                                    <li>Arquivos PDF (até 10MB)</li>
+                                    <li>
+                                        Texto inserido diretamente na plataforma
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h3>Posso usar o QuestionAI offline?</h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>
+                                    A geração de questões requer conexão com a
+                                    internet para acessar a IA. Porém, você pode
+                                    visualizar questões já geradas e seus
+                                    relatórios offline.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Modal -->
+        <div class="modal" id="question-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Responder Questão</h3>
+                    <button class="modal-close" id="close-question-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="question-modal-body">
+                    <!-- Question content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toast-container"></div>
+
+        <!-- Scripts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+        <script>
+            // Configure PDF.js worker
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc =
+                    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            }
+
+            // Control navbar visibility
+            document.addEventListener('DOMContentLoaded', function () {
+                const navbar = document.getElementById('navbar');
+                const loginPage = document.getElementById('login-page');
+                const registerPage = document.getElementById('register-page');
+
+                // Hide navbar on login/register pages
+                if (
+                    loginPage.classList.contains('active') ||
+                    registerPage.classList.contains('active')
+                ) {
+                    navbar.style.display = 'none';
+                } else {
+                    navbar.style.display = 'flex';
+                }
+
+                // Listen for page changes
+                document.querySelectorAll('.nav-link').forEach((link) => {
+                    link.addEventListener('click', function () {
+                        const targetPage = this.getAttribute('data-page');
+                        if (
+                            targetPage === 'login' ||
+                            targetPage === 'register'
+                        ) {
+                            navbar.style.display = 'none';
+                        } else {
+                            navbar.style.display = 'flex';
+                        }
+                    });
+                });
+            });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="js/storage.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/generator.js"></script>
+        <script src="js/questions.js"></script>
+        <script src="js/reports.js"></script>
+        <script src="js/profile.js"></script>
+        <script src="js/faq.js"></script>
+        <script src="js/gamification.js"></script>
+        <script src="js/extras.js"></script>
+        <script src="js/theme-manager.js"></script>
+        <script src="js/favorites.js"></script>
+        <script src="js/study-mode.js"></script>
+        <script src="js/fab-manager.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>
